@@ -1,0 +1,119 @@
+/* Điều chỉnh khoảng cách cho phần chọn ngôn ngữ */
+.source-language,
+.target-language {
+    margin-bottom: 1rem;
+}
+
+/* Điều chỉnh kích thước của select để tránh bị bó hẹp */
+select {
+    width: 100%; /* Để dropdown không bị nhỏ lại */
+    padding: 5px;
+}
+
+/* Điều chỉnh ô nhập văn bản */
+#text-to-translate {
+    width: 100%;
+    height: 100px; /* Tăng chiều cao để dễ nhập nội dung */
+    margin-bottom: 1rem;
+    padding: 10px;
+}
+
+/* Style cho nút phát âm và copy */
+#pronounce-button,
+#copy-button {
+    margin-left: 8px;
+}
+
+/* Điều chỉnh khoảng cách cho nội dung thẻ card */
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Cải thiện style cho label */
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Định dạng vùng kết quả dịch */
+pre {
+    background-color: #f5f5f5;
+    padding: 1rem;
+    border-radius: 5px;
+    overflow-x: auto; /* Thanh cuộn ngang nếu nội dung dài */
+}
+
+/* Style cho nút dịch */
+#translate-button {
+    margin-top: 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease-in-out;
+}
+
+#translate-button:hover {
+    background-color: #0056b3;
+}
+
+/* Căn giữa nội dung trong trang */
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px; /* Giúp nội dung không bị quá sát màn hình */
+}
+
+/* Điều chỉnh kích thước card */
+.card {
+    margin: 0;
+    width: 800px;
+    max-height: 90vh; /* Giới hạn chiều cao */
+    overflow-y: auto; /* Bật thanh cuộn nếu nội dung dài */
+    border-radius: 10px;
+}
+
+/* Định dạng body */
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: #f8f9fa;
+    overflow-y: auto; /* Cho phép cuộn toàn trang nếu cần */
+}
+
+/* Hiệu ứng tuyết rơi */
+.snowfall-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Để tuyết không che mất nội dung */
+    z-index: -1;
+}
+
+.snowflake {
+    position: absolute;
+    top: 0;
+    font-size: 0.8rem;
+    color: white !important;
+    user-select: none;
+    animation: snowfall linear infinite;
+}
+
+@keyframes snowfall {
+    to {
+        transform: translateY(100vh);
+    }
+}
+
+#target_language_file {
+    display: block !important;
+    visibility: visible !important;
+    width: auto !important;
+}

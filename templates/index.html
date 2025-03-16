@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=6AqfGK6s"></script>   <!-- Pronounce API -->
+    <script src="{{ url_for('static', filename='snowfall.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>  <!-- Pronounce API -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Translator</title>
+</head>
+
+<body style="background-color: black;">
+    <div class="snowfall-container">
+        <div class="snowfall"></div>
+    </div>
+    
+    <div class="container mt-3">
+        <div class="card">
+            <h2 class="text-center mb-2 mt-4">Translator</h2>
+            <div class="card-body">
+    
+                <form action="/translate" method="POST">
+                    <div class="input-group mb-3">
+                        <select class="custom-select" id="source-language-select" name="source_language">
+                            {% for code, name in source_languages %}
+                                <option value="{{ code }}">{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="material-icons">arrow_forward</i></span>
+                        </div>
+                        <select class="custom-select" id="target-language-select" name="target_language">
+                            {% for code, name in target_languages %}
+                                <option value="{{ code }}">{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+    
+                    <div class="form-group">
+                        <textarea class="form-control" id="text-to-translate" name="text" rows="3" placeholder="Enter text to translate"></textarea>
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="translated-text">Translated text:</label>
+                    </div>
+    
+                    <!-- Removed voice selection dropdown and modified pronunciation button -->
+                    <div id="snippet-container">
+                        <pre id="snippet"></pre>
+                        <span class="btn btn-secondary" id="pronounce-button"><i class="bi bi-volume-up"></i></span>
+                        <button type="button" class="btn btn-primary" id="copy-button"><i class="bi bi-clipboard"></i></button>
+                    </div>
+    
+                    <button type="submit" class="btn btn-success" id="translate-button">Translate</button>
+                </form>
+
+                <!-- Form upload file -->
+                <hr>
+                <h4 class="mt-4">Upload File to Translate</h4>
+                <form action="/translate_file" method="post" enctype="multipart/form-data" id="file-translate-form" class="w-100 px-3">
+                    <div class="form-group">
+                        <label for="file">Select file:</label>
+                        <input type="file" class="form-control-file w-100" name="file" id="file" required>
+                    </div>
+
+                    <label for="target_language_file">Select target language:</label>
+                    <select name="target_language_file" id="target_language_file" required>
+                        <option value="" selected disabled>-- Select Language --</option> <!-- Mục mặc định -->
+                        {% for code, name in target_languages %}
+                            <option value="{{ code }}">{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                    
+                    <button type="submit" class="btn btn-primary btn-block">Translate File</button>
+                </form>
+
+                {% if file_result %}
+                    <a id="download-link" href="{{ file_result }}" download>Download Translated File</a>
+                {% endif %}
+
+                {% if error %}
+                <p style="color: red;">{{ error }}</p>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("translate-button").addEventListener("click", function(event) {
+            event.preventDefault();
+            const form = event.target.form;
+            const formData = new FormData(form);
+    
+            fetch('/translate', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("snippet").textContent = data.translation;
+                })
+                .catch(error => console.error("Error:", error));
+        });
+    
+        document.getElementById("pronounce-button").addEventListener("click", function() {
+            const textToSpeak = document.getElementById("snippet").textContent;
+            responsiveVoice.speak(textToSpeak, 'UK English Female', { delay: 0 });
+        });
+    
+        document.getElementById("copy-button").addEventListener("click", function() {
+            const snippetText = document.getElementById("snippet").textContent;
+            navigator.clipboard.writeText(snippetText)
+                .then(() => alert("Text copied to clipboard!"))
+                .catch(err => console.error("Failed to copy text:", err));
+        });
+
+            document.addEventListener("DOMContentLoaded", function() {
+            const downloadLink = document.getElementById("download-link");
+
+            if (downloadLink) {
+                downloadLink.addEventListener("click", function() {
+                    setTimeout(() => {
+                        downloadLink.style.display = "none"; // Ẩn link sau khi tải
+                    }, 1000);
+                });
+            }
+        });
+
+    </script>
+
+</body>
+</html>
